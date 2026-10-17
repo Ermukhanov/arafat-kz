@@ -218,10 +218,41 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .reveal, .stagger > * { opacity: 1; transform: none; }
   }
+
+  /* INTRO overlay on page load */
+  #intro {
+    position: fixed; inset: 0; z-index: 999;
+    background: linear-gradient(120deg, #2a1a12, #5a2a1c);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 18px;
+    animation: introOut 1s ease 1.6s forwards;
+  }
+  #intro .intro-name {
+    font-size: 2.2rem; letter-spacing: .25em; text-transform: uppercase; color: var(--cream);
+    opacity: 0; animation: introIn .9s ease .2s forwards;
+  }
+  #intro .intro-band {
+    width: min(320px, 70vw); height: 22px; background-color: var(--red);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='26' viewBox='0 0 40 26'%3E%3Cg fill='none' stroke='%23f6eddc' stroke-width='1.5'%3E%3Cpath d='M0 13 L10 3 L20 13 L30 3 L40 13 M0 23 L10 13 L20 23 L30 13 L40 23'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 40px 26px;
+    opacity: 0; animation: introIn .9s ease .5s forwards, bandMove 1.2s linear infinite;
+  }
+  #intro.gone { display: none; }
+  @keyframes introIn { to { opacity: 1; } }
+  @keyframes introOut { to { opacity: 0; visibility: hidden; } }
+  @keyframes bandMove { from { background-position: 0 0; } to { background-position: 40px 0; } }
+  /* endlessly moving oyu bands */
+  .oyu, .border-band { animation: bandScroll 6s linear infinite; }
+  .hero::before { animation-duration: 18s; }
+  @keyframes bandScroll { from { background-position: 0 0; } to { background-position: 120px 0; } }
 </style>
 </head>
 <body>
 
+<div id="intro"><div class="intro-name">Arafat 2</div><div class="intro-band"></div></div>
+<script>
+setTimeout(function(){ var i = document.getElementById('intro'); if(i) i.classList.add('gone'); }, 2700);
+</script>
 <header class="hero">
   <span class="float-orn a" aria-hidden="true"></span>
   <span class="float-orn b" aria-hidden="true"></span>
