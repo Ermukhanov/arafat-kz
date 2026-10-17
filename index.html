@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arafat — кафе, Хромтау</title>
+<title>Arafat, кафе, Хромтау</title>
 <style>
   :root {
     --dark: #2a1a12;
@@ -18,6 +18,7 @@
     background: var(--cream);
     color: var(--dark);
     line-height: 1.6;
+    overflow-x: hidden;
   }
   /* Kazakh ornament (ою) built as an SVG tile */
   .oyu {
@@ -31,27 +32,45 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='26' viewBox='0 0 40 26'%3E%3Cg fill='none' stroke='%23f6eddc' stroke-width='1.5'%3E%3Cpath d='M0 13 L10 3 L20 13 L30 3 L40 13 M0 23 L10 13 L20 23 L30 13 L40 23'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 40px 26px;
   }
+
+  /* HERO: slow gradient shift + floating ornament layers */
   header.hero {
     position: relative;
-    background: var(--dark);
     color: var(--cream);
     text-align: center;
     padding: 120px 24px 110px;
     overflow: hidden;
+    background: linear-gradient(120deg, #2a1a12, #5a2a1c, #2a1a12, #3d2216);
+    background-size: 300% 300%;
+    animation: gradShift 14s ease infinite;
   }
   header.hero::before {
     content: "";
-    position: absolute; inset: 0;
+    position: absolute; inset: -60px;
     opacity: 0.12;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23c9a040' stroke-width='1.6'%3E%3Cpath d='M30 6 L54 30 L30 54 L6 30 Z'/%3E%3Cpath d='M30 16 L44 30 L30 44 L16 30 Z'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 60px 60px;
+    animation: drift 40s linear infinite;
   }
-  .hero-inner { position: relative; animation: fadeUp 1.2s ease both; }
+  .float-orn {
+    position: absolute;
+    width: 140px; height: 140px;
+    opacity: 0.18;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='none' stroke='%23c9a040' stroke-width='2'%3E%3Cpath d='M70 8 L132 70 L70 132 L8 70 Z'/%3E%3Cpath d='M70 30 L110 70 L70 110 L30 70 Z'/%3E%3Ccircle cx='70' cy='70' r='6' fill='%23c9a040'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: floaty 9s ease-in-out infinite;
+  }
+  .float-orn.a { top: 12%; left: 6%; }
+  .float-orn.b { bottom: 8%; right: 7%; width: 110px; height: 110px; animation-duration: 12s; animation-delay: -4s; }
+  .hero-inner { position: relative; animation: fadeUp 1.2s ease both; will-change: transform; }
   .hero h1 {
     font-size: 4.5rem;
     letter-spacing: 0.12em;
     color: var(--gold);
     font-weight: normal;
+    animation: shimmer 6s ease-in-out infinite;
   }
   .hero p.tag { font-size: 1.15rem; margin-top: 12px; opacity: 0.9; }
   .hero .city { margin-top: 6px; color: var(--gold); letter-spacing: 0.2em; font-size: 0.85rem; text-transform: uppercase; }
@@ -67,6 +86,7 @@
     transition: transform .25s ease, box-shadow .25s ease;
   }
   .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(0,0,0,.3); }
+
   section { padding: 90px 24px; max-width: 980px; margin: 0 auto; }
   section h2 {
     text-align: center;
@@ -76,8 +96,20 @@
     margin-bottom: 40px;
     letter-spacing: 0.05em;
   }
+  /* Staggered scroll reveal */
   .reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s ease; }
   .reveal.in { opacity: 1; transform: none; }
+  .stagger > * { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .stagger.in > * { opacity: 1; transform: none; }
+  .stagger.in > *:nth-child(1) { transition-delay: .05s; }
+  .stagger.in > *:nth-child(2) { transition-delay: .15s; }
+  .stagger.in > *:nth-child(3) { transition-delay: .25s; }
+  .stagger.in > *:nth-child(4) { transition-delay: .35s; }
+  .stagger.in > *:nth-child(5) { transition-delay: .45s; }
+  .stagger.in > *:nth-child(6) { transition-delay: .55s; }
+  .stagger.in > *:nth-child(7) { transition-delay: .65s; }
+  .stagger.in > *:nth-child(8) { transition-delay: .75s; }
+
   .about p { text-align: center; max-width: 620px; margin: 0 auto; font-size: 1.1rem; }
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
   .card {
@@ -90,16 +122,74 @@
   .card:hover { transform: translateY(-6px); box-shadow: 0 12px 24px rgba(90,52,32,.18); }
   .card h3 { color: var(--red); font-weight: normal; font-size: 1.3rem; margin-bottom: 10px; }
   .card p { font-size: 0.95rem; color: var(--brown); }
+
+  /* MENU */
+  .menu-note {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--brown);
+    opacity: 0.75;
+    margin: -24px 0 36px;
+    letter-spacing: 0.02em;
+  }
+  .menu-group { margin-bottom: 40px; }
+  .menu-group h3 {
+    font-weight: normal;
+    color: var(--red);
+    font-size: 1.35rem;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--gold);
+  }
+  .menu-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .dish {
+    background: #fffaf0;
+    border-left: 3px solid var(--gold);
+    padding: 16px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .dish:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 10px 20px rgba(90,52,32,.15); border-left-color: var(--red); }
+  .dish .name { color: var(--dark); }
+  .dish .name small { display: block; font-size: 0.8rem; color: var(--brown); opacity: 0.8; }
+  .dish .price { color: var(--red); white-space: nowrap; font-size: 0.95rem; }
+
+  /* GALLERY */
   .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .tile { height: 180px; border: 1px solid var(--gold); transition: transform .3s ease; }
-  .tile:hover { transform: translateY(-4px); }
+  .tile {
+    height: 180px;
+    border: 1px solid var(--gold);
+    overflow: hidden;
+    position: relative;
+  }
+  .tile img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .6s ease;
+  }
+  .tile:hover img { transform: scale(1.08); }
+  .tile.big { grid-column: span 2; height: 260px; }
   .tile.dark { background-color: var(--brown); }
   .tile.red { background-color: var(--red); }
   .tile.cream { background-color: #efe1c2; }
+  .tile.oyu { transition: transform .3s ease; }
+  .tile.oyu:hover { transform: scale(1.03); }
+  .tile.oyu::after {
+    content: ""; position: absolute; inset: 0;
+    background-image: inherit;
+    animation: spin 60s linear infinite;
+    opacity: 0.25;
+  }
+
   .contacts { background: var(--brown); color: var(--cream); }
   .contacts h2 { color: var(--gold); }
   .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; text-align: center; }
-  .contact-grid div { padding: 20px; border: 1px solid var(--gold); }
+  .contact-grid div { padding: 20px; border: 1px solid var(--gold); transition: background .3s ease; }
+  .contact-grid div:hover { background: rgba(201,160,64,.08); }
   .contact-grid a { color: var(--gold); text-decoration: none; }
   .wa {
     position: fixed; right: 20px; bottom: 20px;
@@ -111,20 +201,30 @@
   }
   .wa:hover { transform: translateY(-3px); }
   footer { text-align: center; padding: 30px; font-size: 0.85rem; color: var(--brown); }
+
   @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  @keyframes gradShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  @keyframes drift { from { transform: translate(0,0); } to { transform: translate(60px,60px); } }
+  @keyframes floaty { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-18px) rotate(6deg); } }
+  @keyframes shimmer { 0%,100% { text-shadow: 0 0 0 rgba(201,160,64,0); } 50% { text-shadow: 0 0 18px rgba(201,160,64,.35); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   @media (max-width: 640px) {
     .hero h1 { font-size: 3rem; }
     .gallery { grid-template-columns: 1fr 1fr; }
+    .tile.big { grid-column: span 2; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
-    .reveal { opacity: 1; transform: none; }
+    .reveal, .stagger > * { opacity: 1; transform: none; }
   }
 </style>
 </head>
 <body>
 
-<header class="hero oyu-hero">
+<header class="hero">
+  <span class="float-orn a" aria-hidden="true"></span>
+  <span class="float-orn b" aria-hidden="true"></span>
   <div class="hero-inner">
     <h1>ARAFAT</h1>
     <p class="tag">Дәстүрлі дастархан · Хромтау</p>
@@ -140,9 +240,44 @@
 </section>
 
 <section class="reveal">
+  <h2>Мәзір</h2>
+  <p class="menu-note">үлгі бағалар — нақты бағалар кейінірек</p>
+
+  <div class="menu-group">
+    <h3>Қазақша тағамдар</h3>
+    <div class="menu-list stagger">
+      <div class="dish"><span class="name">Бешбармақ<small>қой еті, жұқа құймақ, пияз сорпасы</small></span><span class="price">3 800 ₸</span></div>
+      <div class="dish"><span class="name">Палау<small>қазы, сәбіз, күріш</small></span><span class="price">2 900 ₸</span></div>
+      <div class="dish"><span class="name">Лагман<small>қол жасалған кесте, ет, көкөніс</small></span><span class="price">2 400 ₸</span></div>
+      <div class="dish"><span class="name">Қуырдақ<small>ет, пияз, картоп</small></span><span class="price">2 600 ₸</span></div>
+      <div class="dish"><span class="name">Сорпа<small>ет сорпасы, үй үлгісі</small></span><span class="price">1 400 ₸</span></div>
+    </div>
+  </div>
+
+  <div class="menu-group">
+    <h3>Шашлық және самса</h3>
+    <div class="menu-list stagger">
+      <div class="dish"><span class="name">Қой шашлығы<small>1 шампур</small></span><span class="price">900 ₸</span></div>
+      <div class="dish"><span class="name">Жылқы шашлығы<small>1 шампур</small></span><span class="price">1 100 ₸</span></div>
+      <div class="dish"><span class="name">Самса<small>тандырда, ет пен пияз</small></span><span class="price">450 ₸</span></div>
+    </div>
+  </div>
+
+  <div class="menu-group">
+    <h3>Дастархан және сусын</h3>
+    <div class="menu-list stagger">
+      <div class="dish"><span class="name">Ірімшік тақтасы<small>ірімшік, құрт, қатық</small></span><span class="price">1 200 ₸</span></div>
+      <div class="dish"><span class="name">Бауырсақ<small>үйде пісірілген, 1 дана</small></span><span class="price">250 ₸</span></div>
+      <div class="dish"><span class="name">Қойылған шай<small>пиала</small></span><span class="price">300 ₸</span></div>
+      <div class="dish"><span class="name">Сүтті шай<small>чайник</small></span><span class="price">1 200 ₸</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="reveal">
   <div class="oyu" style="height:60px;margin-bottom:40px;opacity:.5"></div>
-  <h2>Филиалдар</h2>
-  <div class="cards">
+  <h2>Филиал</h2>
+  <div class="cards stagger">
     <div class="card">
       <h3>Arafat 2</h3>
       <p>Мұхтар Әуезов көшесі, 4Г<br>Ашық: 00:00-ге дейін<br>(Яндекс Карталар, рейтинг 4,4)</p>
@@ -152,19 +287,19 @@
 
 <section class="reveal">
   <h2>Галерея</h2>
-  <div class="gallery">
+  <div class="gallery stagger">
+    <div class="tile big"><img src="img/plov.jpg" alt="Палау"></div>
     <div class="tile dark oyu"></div>
     <div class="tile red oyu"></div>
     <div class="tile cream oyu"></div>
     <div class="tile red oyu"></div>
     <div class="tile cream oyu"></div>
-    <div class="tile dark oyu"></div>
   </div>
 </section>
 
 <section class="contacts reveal">
   <h2>Байланыс</h2>
-  <div class="contact-grid">
+  <div class="contact-grid stagger">
     <div>
       <strong>Arafat 2</strong><br>
       Мұхтар Әуезов көшесі, 4Г, Хромтау<br>
@@ -183,10 +318,18 @@
 <a class="wa" href="https://wa.me/77774776768">WhatsApp</a>
 
 <script>
+  // Reveal elements (and staggered children) on scroll
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: 0.15 });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  document.querySelectorAll('.reveal, .stagger').forEach(el => io.observe(el));
+
+  // Subtle hero parallax on scroll
+  const heroInner = document.querySelector('.hero-inner');
+  window.addEventListener('scroll', () => {
+    const y = Math.min(window.scrollY, 600);
+    heroInner.style.transform = 'translateY(' + (y * 0.25) + 'px)';
+  }, { passive: true });
 </script>
 </body>
 </html>
