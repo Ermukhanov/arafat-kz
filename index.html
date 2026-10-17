@@ -65,6 +65,11 @@
   .float-orn.a { top: 12%; left: 6%; }
   .float-orn.b { bottom: 8%; right: 7%; width: 110px; height: 110px; animation-duration: 12s; animation-delay: -4s; }
   .hero-inner { position: relative; animation: fadeUp 1.2s ease both; will-change: transform; }
+  .hero .logo {
+    width: min(320px, 70vw);
+    display: block; margin: 0 auto 14px;
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,.45));
+  }
   .hero h1 {
     font-size: 4.5rem;
     letter-spacing: 0.12em;
@@ -210,7 +215,12 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (max-width: 640px) {
-    .hero h1 { font-size: 3rem; }
+    .hero .logo {
+    width: min(320px, 70vw);
+    display: block; margin: 0 auto 14px;
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,.45));
+  }
+  .hero h1 { font-size: 3rem; }
     .gallery { grid-template-columns: 1fr 1fr; }
     .tile.big { grid-column: span 2; }
   }
@@ -249,7 +259,7 @@
 </head>
 <body>
 
-<div id="intro"><div class="intro-name">Arafat 2</div><div class="intro-band"></div></div>
+<div id="intro"><img class="intro-logo" src="img/logo.jpg" alt="Arafat" style="width:min(280px,60vw);display:block;animation:introIn .9s ease .2s forwards;opacity:0"><div class="intro-band"></div></div>
 <script>
 setTimeout(function(){ var i = document.getElementById('intro'); if(i) i.classList.add('gone'); }, 2700);
 </script>
@@ -257,7 +267,7 @@ setTimeout(function(){ var i = document.getElementById('intro'); if(i) i.classLi
   <span class="float-orn a" aria-hidden="true"></span>
   <span class="float-orn b" aria-hidden="true"></span>
   <div class="hero-inner">
-    <h1>ARAFAT</h1>
+    <img class="logo" src="img/logo.jpg" alt="Arafat Cafesi">
     <p class="tag">Дәстүрлі дастархан · Хромтау</p>
     <p class="city">Хромтау, Ақтөбе облысы</p>
     <a class="btn" href="https://wa.me/77774776768">WhatsApp-қа жазу</a>
